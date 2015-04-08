@@ -1,11 +1,13 @@
 package main.java.service;
 
-import java.util.Collection;
-import java.util.List;
+import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+
+@Component
 public interface MessageService {
 
-    void createMessage(String message);
+    void saveMessage(Message message);
 
-    Collection<String> fetchAllMessages();
+    Collection<Message> fetchAllMessages();
 }

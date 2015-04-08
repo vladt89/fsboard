@@ -1,18 +1,21 @@
 package main.java.service;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Collection;
 import java.util.LinkedList;
 
+@Component
 public class MessageServiceImpl implements MessageService {
-    private Collection<String> messageLibrary = new LinkedList<>();
+    private Collection<Message> messageLibrary = new LinkedList<>();
 
     @Override
-    public void createMessage(String message) {
+    public void saveMessage(Message message) {
         messageLibrary.add(message);
     }
 
     @Override
-    public Collection<String> fetchAllMessages() {
+    public Collection<Message> fetchAllMessages() {
         return messageLibrary;
     }
 }

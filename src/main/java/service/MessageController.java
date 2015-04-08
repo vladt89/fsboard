@@ -17,9 +17,10 @@ public class MessageController {
     @RequestMapping(method = RequestMethod.GET)
     public String getThis(Map<String, String> map) {
 
-        messageService.createMessage("new Message");
+        Message message = new Message();
+        messageService.saveMessage(message);
 
         map.put("message", "Hello WorldX");
-        return "hello";
+        return "creationSuccess";
     }
 }

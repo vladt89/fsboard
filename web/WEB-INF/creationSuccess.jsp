@@ -3,7 +3,12 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-  <title>Title</title>
+  <title>Message creation success</title>
 </head>
-<body>Here there is a message: ${message}</body>
+<body>
+  Your message was created!<br>
+  <form action="ReceiveMessagesServlet" method="get">
+    <input type="submit" name="command" value="create new message">
+  </form>
+</body>
 </html>
