@@ -20,6 +20,6 @@ public class MessageController {
         messageService.createMessage("new Message");
 
         map.put("message", "Hello WorldX");
-        return "/hello.jsp";
+        return "hello";
     }
 }
