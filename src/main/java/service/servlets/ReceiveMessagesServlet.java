@@ -10,14 +10,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Collection;
 
 public class ReceiveMessagesServlet extends HttpServlet {
@@ -43,7 +37,7 @@ public class ReceiveMessagesServlet extends HttpServlet {
                 fillResponse(response, createAndExportHtmlFile(messages));
             }
             if (XML_TYPE.equals(exportType)) {
-                fillResponse(response, createAndExportXmlFile(messages));
+                fillResponse(response, exportService.createAndExportXml("tempFile.xml", messages));
             }
         }
 
@@ -77,23 +71,6 @@ public class ReceiveMessagesServlet extends HttpServlet {
         writer.write(builder.toString());
         writer.flush();
         writer.close();
-    }
-
-    private StringBuilder createAndExportXmlFile(Collection<Message> messages) throws IOException {
-        File xmlFile = null;
-        try {
-            xmlFile = exportService.createAndExportXml("tempFile.xml", messages);
-        } catch (TransformerException | ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-
-        StringBuilder output = new StringBuilder();
-        if (xmlFile != null) {
-            for (String line : Files.readAllLines(Paths.get(xmlFile.getPath()), Charset.defaultCharset())) {
-                output.append(line);
-            }
-        }
-        return output;
     }
 
     private Message createMessage(HttpServletRequest request) {
