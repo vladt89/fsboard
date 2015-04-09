@@ -7,7 +7,4 @@
 
     <bean id="exportService" class="main.java.service.export.ExportServiceImpl"/>
 
-    <bean id="receiveMessagesServlet" class="main.java.service.servlets.ReceiveMessagesServlet">
-        <!--<property name="messageService" ref="messageService"/>-->
-    </bean>
 </beans>

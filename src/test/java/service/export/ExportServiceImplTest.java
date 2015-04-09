@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import test.java.service.AbstractMessageServiceTest;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,7 +24,7 @@ import java.util.Collections;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:test-spring-config.xml")
-public class ExportServiceImplTest {
+public class ExportServiceImplTest extends AbstractMessageServiceTest {
     public static final String TEST_FILE_XML = "testfile.xml";
     @Autowired
     private ExportService exportService;
@@ -44,15 +45,18 @@ public class ExportServiceImplTest {
     @Test
     public void testCreateAndExportXml() throws Exception {
         //SETUP SUT
-        Message message = createMessage();
+        final String uniqueMessage = "uniqueMessage";
+        Message message = createMessage(uniqueMessage);
 
         //EXERCISE
         StringBuilder streamResult = exportService.createAndExportXml(TEST_FILE_XML, Collections.singletonList(message));
 
         //VERIFY
         Assert.assertNotNull(streamResult);
-        Assert.assertTrue(streamResult.toString().startsWith("<?xml version="));
-        Assert.assertTrue(streamResult.toString().endsWith("</messages>"));
+        final String resultString = streamResult.toString();
+        Assert.assertTrue(resultString.startsWith("<?xml version="));
+        Assert.assertTrue(resultString.endsWith("</messages>"));
+        Assert.assertTrue(resultString.contains(uniqueMessage));
     }
 
     /**
@@ -62,23 +66,17 @@ public class ExportServiceImplTest {
     @Test
     public void testCreateAndExportHtml() throws Exception {
         //SETUP SUT
-        Message message = createMessage();
+        final String onlyGreatContent = "onlyGreatContent";
+        Message message = createMessage(onlyGreatContent);
 
         //EXERCISE
         StringBuilder result = exportService.createAndExportHtmlFile(Collections.singletonList(message));
 
         //VERIFY
         Assert.assertNotNull(result);
-        Assert.assertTrue(result.toString().startsWith("<html><body>"));
-        Assert.assertTrue(result.toString().endsWith("</body></html>"));
-    }
-
-    private Message createMessage() {
-        Message message = new Message();
-        message.setTitle("title");
-        message.setContent("content");
-        message.setSender("author");
-        message.setUrl("url");
-        return message;
+        final String resultString = result.toString();
+        Assert.assertTrue(resultString.startsWith("<html><body>"));
+        Assert.assertTrue(resultString.endsWith("</body></html>"));
+        Assert.assertTrue(resultString.contains(onlyGreatContent));
     }
 }

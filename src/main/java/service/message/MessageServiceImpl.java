@@ -2,6 +2,7 @@ package main.java.service.message;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Class which provides functionality to work with messages.
@@ -29,5 +30,13 @@ public class MessageServiceImpl implements MessageService {
         message.setSender(author);
         message.setUrl(url);
         return message;
+    }
+
+    public Collection<Message> getMessageLibrary() {
+        return messageLibrary;
+    }
+
+    public void setMessageLibrary(List<Message> messageLibrary) {
+        this.messageLibrary = messageLibrary;
     }
 }
