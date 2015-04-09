@@ -1,7 +1,9 @@
 package main.java.service.servlets;
 
 /**
- * Created by vladt89 on 9.4.2015.
+ * Enumeration which contains different types of command.
+ *
+ * @author vladimir.tikhomirov
  */
 public enum Command {
     CREATE_MESSAGE ("create message"),

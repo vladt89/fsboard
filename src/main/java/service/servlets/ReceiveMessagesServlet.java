@@ -14,6 +14,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 
+/**
+ * Class which is responsible for communication with UI.
+ *
+ * @author vladimir.tikhomirov
+ */
 public class ReceiveMessagesServlet extends HttpServlet {
 
     public static final String HTML_TYPE = "html";

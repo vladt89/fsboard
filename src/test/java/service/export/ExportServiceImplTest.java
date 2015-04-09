@@ -13,9 +13,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Collections;
 
 /**
+ * Test class for {@link ExportService}.
+ *
  * @author vladimir.tikhomirov
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,6 +37,10 @@ public class ExportServiceImplTest {
         }
     }
 
+    /**
+     * Test for {@link ExportService#createAndExportXml(String, Collection)}.
+     * Happy path.
+     */
     @Test
     public void testCreateAndExportXml() throws Exception {
         //SETUP SUT
@@ -48,6 +55,10 @@ public class ExportServiceImplTest {
         Assert.assertTrue(streamResult.toString().endsWith("</messages>"));
     }
 
+    /**
+     * Test for {@link ExportService#createAndExportHtmlFile(Collection)}.
+     * Happy path.
+     */
     @Test
     public void testCreateAndExportHtml() throws Exception {
         //SETUP SUT
