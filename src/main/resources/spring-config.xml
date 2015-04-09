@@ -5,4 +5,9 @@
 
        <bean id="messageService" class="main.java.service.message.MessageServiceImpl"/>
 
+       <bean id="exportService" class="main.java.service.export.ExportServiceImpl"/>
+
+       <bean id="receiveMessagesServlet" class="main.java.service.servlets.ReceiveMessagesServlet" init-method="init">
+              <!--<property name="messageService" ref="messageService"/>-->
+       </bean>
 </beans>

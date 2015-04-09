@@ -15,17 +15,17 @@ import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
 
 public class ReceiveMessagesServlet extends HttpServlet {
 
     public static final String HTML_TYPE = "html";
     public static final String XML_TYPE = "xml";
 
-    //    @Autowired
     private MessageService messageService = new MessageServiceImpl();
-
     private ExportService exportService = new ExportServiceImpl();
 
     @Override
@@ -53,8 +53,14 @@ public class ReceiveMessagesServlet extends HttpServlet {
 
     private StringBuilder createAndExportHtmlFile() {
         StringBuilder builder = new StringBuilder();
+        Collection<Message> messages = messageService.fetchAllMessages();
+        if (messages.isEmpty()) {
+            builder.append("You haven't create any messages yet. Please, return to the previous page and create a new message.");
+            return builder;
+        }
+
         builder.append("<html><body>These are your messages: <br>");
-        for (Message message : messageService.fetchAllMessages()) {
+        for (Message message : messages) {
             builder.append(message.getTitle()).append(" ");
             builder.append(message.getContent()).append(" ");
             builder.append(message.getSender()).append(" ");
@@ -83,7 +89,7 @@ public class ReceiveMessagesServlet extends HttpServlet {
 
         StringBuilder output = new StringBuilder();
         if (xmlFile != null) {
-            for (String line : Files.readAllLines(Paths.get(xmlFile.getPath()))) {
+            for (String line : Files.readAllLines(Paths.get(xmlFile.getPath()), Charset.defaultCharset())) {
                 output.append(line);
             }
         }

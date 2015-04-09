@@ -11,8 +11,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * @author vladimir.tikhomirov
@@ -51,11 +50,11 @@ public class ExportServiceImpl implements ExportService {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource(doc);
+
         final String dir = System.getProperty("user.dir");
-        File outputFile = new File(dir + filename);
+        File outputFile = new File(dir + "/" + filename);
         StreamResult result = new StreamResult(outputFile);
         transformer.transform(source, result);
-        OutputStream outputStream = result.getOutputStream();
         return outputFile;
     }
 }

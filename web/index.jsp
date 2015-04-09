@@ -33,7 +33,6 @@
             <select name="exportType">
               <option value="xml">xml</option>
               <option value="html">html</option>
-              <option value="csv">csv</option>
             </select>
           </td>
           <td align="right"><input type="submit" name="command" value="list messages"></td>

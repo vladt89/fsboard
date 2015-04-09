@@ -20,7 +20,7 @@ public class ExportServiceImplTest {
     @After
     public void tearDown() throws Exception {
         final String dir = System.getProperty("user.dir");
-        Files.delete(Paths.get(dir + TESTFILE_XML));
+        Files.delete(Paths.get(dir + "/" + TESTFILE_XML));
     }
 
     @Test
