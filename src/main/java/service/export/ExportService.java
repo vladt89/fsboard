@@ -10,4 +10,6 @@ import java.util.Collection;
 public interface ExportService {
 
     StringBuilder createAndExportXml(String filename, Collection<Message> messages);
+
+    StringBuilder createAndExportHtmlFile(Collection<Message> messages);
 }

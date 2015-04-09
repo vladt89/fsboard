@@ -7,7 +7,7 @@ import java.util.Collection;
 @Component
 public interface MessageService {
 
-    void saveMessage(Message message);
-
     Collection<Message> fetchAllMessages();
+
+    void createAndSaveMessage(String title, String content, String author, String url);
 }

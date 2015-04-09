@@ -25,8 +25,14 @@ import java.util.Collection;
  */
 public class ExportServiceImpl implements ExportService {
 
+    public static final String NO_MESSAGES_ERROR = "You haven't create any messages yet. Please, return to the previous page and create a new message.";
+
     @Override
     public StringBuilder createAndExportXml(String filename, Collection<Message> messages) {
+
+        if (messages.isEmpty()) {
+            return new StringBuilder(NO_MESSAGES_ERROR);
+        }
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder;
@@ -34,7 +40,7 @@ public class ExportServiceImpl implements ExportService {
             docBuilder = docFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
-            return new StringBuilder();
+            return new StringBuilder(e.toString());
         }
 
         Document doc = docBuilder.newDocument();
@@ -59,7 +65,7 @@ public class ExportServiceImpl implements ExportService {
             transformer = transformerFactory.newTransformer();
         } catch (TransformerConfigurationException e) {
             e.printStackTrace();
-            return new StringBuilder();
+            return new StringBuilder(e.toString());
         }
         DOMSource source = new DOMSource(doc);
 
@@ -69,6 +75,7 @@ public class ExportServiceImpl implements ExportService {
             transformer.transform(source, new StreamResult(outputFile));
         } catch (TransformerException e) {
             e.printStackTrace();
+            new StringBuilder(e.toString());
         }
 
         StringBuilder output = new StringBuilder();
@@ -78,6 +85,7 @@ public class ExportServiceImpl implements ExportService {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            new StringBuilder(e.toString());
         }
         return output;
     }
@@ -86,5 +94,32 @@ public class ExportServiceImpl implements ExportService {
         Element docElement = doc.createElement(type);
         docElement.appendChild(doc.createTextNode(value));
         return docElement;
+    }
+
+    @Override
+    public StringBuilder createAndExportHtmlFile(Collection<Message> messages) {
+        StringBuilder builder = new StringBuilder();
+        if (messages.isEmpty()) {
+            builder.append(NO_MESSAGES_ERROR);
+            return builder;
+        }
+
+        builder.append("<html><body>These are your messages: <br>" +
+                "<table>" +
+                "<tr align=\"center\">" +
+                "<td><b>Title</b></td>" +
+                "<td><b>Content</b></td>" +
+                "<td><b>Author</b></td>" +
+                "<td><b>Url</b></td>" +
+                "</tr>");
+        for (Message message : messages) {
+            builder.append("<tr><td>").append(message.getTitle()).append("</td>");
+            builder.append("<td>").append(message.getContent()).append("</td>");
+            builder.append("<td>").append(message.getSender()).append("</td>");
+            builder.append("<td>").append(message.getUrl()).append("</td>");
+            builder.append("</tr>");
+        }
+        builder.append("</table></body></html>");
+        return builder;
     }
 }

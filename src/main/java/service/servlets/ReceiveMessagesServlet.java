@@ -26,7 +26,11 @@ public class ReceiveMessagesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String command = request.getParameter("command");
         if (Command.CREATE_MESSAGE.getValue().equals(command)) {
-            messageService.saveMessage(createMessage(request));
+            String title = request.getParameter("title");
+            String content = request.getParameter("content");
+            String author = request.getParameter("author");
+            String url = request.getRequestURL().toString();
+            messageService.createAndSaveMessage(title, content, author, url);
             request.getRequestDispatcher("/WEB-INF/creationSuccess.jsp").forward(request, response);
         }
 
@@ -34,7 +38,7 @@ public class ReceiveMessagesServlet extends HttpServlet {
             String exportType = request.getParameter("exportType");
             Collection<Message> messages = messageService.fetchAllMessages();
             if (HTML_TYPE.equals(exportType)) {
-                fillResponse(response, createAndExportHtmlFile(messages));
+                fillResponse(response, exportService.createAndExportHtmlFile(messages));
             }
             if (XML_TYPE.equals(exportType)) {
                 fillResponse(response, exportService.createAndExportXml("tempFile.xml", messages));
@@ -46,39 +50,11 @@ public class ReceiveMessagesServlet extends HttpServlet {
         }
     }
 
-    private StringBuilder createAndExportHtmlFile(Collection<Message> messages) {
-        StringBuilder builder = new StringBuilder();
-        if (messages.isEmpty()) {
-            builder.append("You haven't create any messages yet. Please, return to the previous page and create a new message.");
-            return builder;
-        }
-
-        builder.append("<html><body>These are your messages: <br>");
-        for (Message message : messages) {
-            builder.append(message.getTitle()).append(" ");
-            builder.append(message.getContent()).append(" ");
-            builder.append(message.getSender()).append(" ");
-            builder.append(message.getUrl()).append(" ");
-            builder.append("<br>");
-        }
-        builder.append("</body></html>");
-        return builder;
-    }
-
     private void fillResponse(HttpServletResponse response, StringBuilder builder) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         PrintWriter writer = response.getWriter();
         writer.write(builder.toString());
         writer.flush();
         writer.close();
-    }
-
-    private Message createMessage(HttpServletRequest request) {
-        Message message = new Message();
-        message.setTitle(request.getParameter("title"));
-        message.setContent(request.getParameter("content"));
-        message.setSender(request.getParameter("author"));
-        message.setUrl(request.getRequestURL().toString());
-        return message;
     }
 }
