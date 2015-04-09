@@ -1,5 +1,10 @@
 package main.java.service.message;
 
+/**
+ * Entity class for message.
+ *
+ * @author vladimir.tikhomirov
+ */
 public class Message {
     private String title;
     private String content;

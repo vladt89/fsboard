@@ -1,11 +1,13 @@
 package main.java.service.message;
 
-import org.springframework.stereotype.Component;
-
 import java.util.Collection;
 import java.util.LinkedList;
 
-@Component
+/**
+ * Class which provides functionality to work with messages.
+ *
+ * @author vladimir.tikhomirov
+ */
 public class MessageServiceImpl implements MessageService {
     private Collection<Message> messageLibrary = new LinkedList<>();
 
