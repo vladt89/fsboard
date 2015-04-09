@@ -21,11 +21,14 @@ import java.nio.file.Paths;
 import java.util.Collection;
 
 /**
+ * Class that provides a way to work with messages through different file types.
+ *
  * @author vladimir.tikhomirov
  */
 public class ExportServiceImpl implements ExportService {
 
-    public static final String NO_MESSAGES_ERROR = "You haven't create any messages yet. Please, return to the previous page and create a new message.";
+    public static final String NO_MESSAGES_ERROR = "You haven't create any messages yet." +
+            " Please, return to the previous page and create a new message.";
 
     @Override
     public StringBuilder createAndExportXml(String filename, Collection<Message> messages) {
