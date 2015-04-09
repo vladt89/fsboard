@@ -5,6 +5,7 @@ import main.java.service.export.ExportServiceImpl;
 import main.java.service.message.Message;
 import main.java.service.message.MessageService;
 import main.java.service.message.MessageServiceImpl;
+import org.apache.commons.io.FileUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.List;
 
 public class ReceiveMessagesServlet extends HttpServlet {
 
@@ -64,18 +66,23 @@ public class ReceiveMessagesServlet extends HttpServlet {
             }
 
             if (XML_TYPE.equals(exportType)) {
-                File result = null;
+                File xmlFile = null;
                 try {
-                    result = exportService.createAndExportXml("tempFile.xml");
+                    xmlFile = exportService.createAndExportXml("tempFile.xml");
                 } catch (TransformerException | ParserConfigurationException e) {
                     e.printStackTrace();
                 }
 
+                StringBuilder realResult = new StringBuilder();
+                if (xmlFile != null) {
+                    for (String line : FileUtils.readLines(xmlFile)) {
+                        realResult.append(line);
+                    }
+                }
+
                 response.setStatus(HttpServletResponse.SC_OK);
                 PrintWriter writer = response.getWriter();
-                if (result != null) {
-                    writer.write(result.toString());
-                }
+                writer.write(realResult.toString());
                 writer.flush();
                 writer.close();
             }
