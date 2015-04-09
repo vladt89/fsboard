@@ -7,27 +7,37 @@
     <form action="ReceiveMessagesServlet" method="get">
       <table>
         <tr>
-          <td><label>Title</label></td>
+          <td colspan="2"><b>Create new message</b></td>
+        </tr>
+        <tr>
+          <td><label>Title:</label></td>
           <td><input type="text" name="title"/></td>
         </tr>
         <tr>
-          <td><label>Content</label></td>
+          <td><label>Content:</label></td>
           <td><input type="text" name="content"/></td>
         </tr>
         <tr>
-          <td><label>Author</label></td>
+          <td><label>Author:</label></td>
           <td><input type="text" name="author"/></td>
         </tr>
-        <tr><td><input type="submit" name="command" value="create message"></td></tr>
-        <tr><td>
-          <%--<form action="ReceiveMessagesServlet" method="get" >--%>
-          <select name="exportType">
-            <option value="xml">xml</option>
-            <option value="csv">csv</option>
-            <option value="html">html</option>
-          <%--</select>--%>
-          </form>
-        <tr><td><input type="submit" name="command" value="list messages"></td></tr>
+        <tr>
+          <td colspan="2" align="right"><input type="submit" name="command" value="create message"><br></td>
+        </tr>
+        <tr>
+          <td colspan="2"><b>List all messages</b></td>
+        </tr>
+        <tr>
+          <td>
+            <label>Export type: </label>
+            <select name="exportType">
+              <option value="xml">xml</option>
+              <option value="html">html</option>
+              <option value="csv">csv</option>
+            </select>
+          </td>
+          <td align="right"><input type="submit" name="command" value="list messages"></td>
+        </tr>
       </table>
     </form>
   </body>
