@@ -1,4 +1,4 @@
-package main.java.service;
+package main.java.service.message;
 
 import org.springframework.stereotype.Component;
 

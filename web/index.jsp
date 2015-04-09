@@ -19,6 +19,14 @@
           <td><input type="text" name="author"/></td>
         </tr>
         <tr><td><input type="submit" name="command" value="create message"></td></tr>
+        <tr><td>
+          <%--<form action="ReceiveMessagesServlet" method="get" >--%>
+          <select name="exportType">
+            <option value="xml">xml</option>
+            <option value="csv">csv</option>
+            <option value="html">html</option>
+          <%--</select>--%>
+          </form>
         <tr><td><input type="submit" name="command" value="list messages"></td></tr>
       </table>
     </form>

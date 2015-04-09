@@ -1,4 +1,4 @@
-package main.java.service;
+package main.java.service.message;
 
 public class Message {
     private String title;

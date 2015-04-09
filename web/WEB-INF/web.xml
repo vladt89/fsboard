@@ -14,10 +14,9 @@
     </servlet-mapping>
 
     <servlet>
-        <description></description>
         <display-name>ReceiveMessagesServlet</display-name>
         <servlet-name>ReceiveMessagesServlet</servlet-name>
-        <servlet-class>main.java.service.ReceiveMessagesServlet</servlet-class>
+        <servlet-class>main.java.service.servlets.ReceiveMessagesServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ReceiveMessagesServlet</servlet-name>
