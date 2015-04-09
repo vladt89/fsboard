@@ -3,17 +3,6 @@
 
     <display-name>SpringWebConfiguration</display-name>
     <servlet>
-        <servlet-name>spring-dispatcher</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>spring-dispatcher</servlet-name>
-        <url-pattern>/</url-pattern>
-        <url-pattern>/test</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <display-name>ReceiveMessagesServlet</display-name>
         <servlet-name>ReceiveMessagesServlet</servlet-name>
         <servlet-class>main.java.service.servlets.ReceiveMessagesServlet</servlet-class>
