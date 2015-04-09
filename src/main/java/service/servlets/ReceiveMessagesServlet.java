@@ -5,7 +5,6 @@ import main.java.service.export.ExportServiceImpl;
 import main.java.service.message.Message;
 import main.java.service.message.MessageService;
 import main.java.service.message.MessageServiceImpl;
-import org.apache.commons.io.FileUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,14 +15,11 @@ import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class ReceiveMessagesServlet extends HttpServlet {
 
-    public static final String CREATE_MESSAGE = "create message";
-    public static final String LIST_MESSAGES = "list messages";
-    public static final String CREATE_NEW_MESSAGE = "create new message";
     public static final String HTML_TYPE = "html";
     public static final String XML_TYPE = "xml";
 
@@ -34,64 +30,64 @@ public class ReceiveMessagesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String command = request.getParameter("command");
-        if (CREATE_MESSAGE.equals(command)) {
+        if (Command.CREATE_MESSAGE.getValue().equals(command)) {
             messageService.saveMessage(createMessage(request));
             request.getRequestDispatcher("/WEB-INF/creationSuccess.jsp").forward(request, response);
         }
 
-        if (LIST_MESSAGES.equals(command)) {
-            Collection<Message> messages = messageService.fetchAllMessages();
-
+        if (Command.LIST_MESSAGES.getValue().equals(command)) {
             String exportType = request.getParameter("exportType");
             if (HTML_TYPE.equals(exportType)) {
-                StringBuilder builder = new StringBuilder();
-                String responseToClient = "<html><body>These are your messages: <br>";
-                builder.append(responseToClient);
-                for (Message message : messages) {
-                    builder.append(message.getTitle()).append(" ");
-                    builder.append(message.getContent()).append(" ");
-                    builder.append(message.getSender()).append(" ");
-                    builder.append(message.getUrl()).append(" ");
-                    builder.append("<br>");
-                }
-                builder.append("</body></html>");
-
-                response.setStatus(HttpServletResponse.SC_OK);
-                PrintWriter writer = response.getWriter();
-                writer.write(builder.toString());
-                writer.flush();
-                writer.close();
+                fillResponse(response, createAndExportHtmlFile());
             }
-
             if (XML_TYPE.equals(exportType)) {
-                File xmlFile = null;
-                try {
-                    xmlFile = exportService.createAndExportXml("tempFile.xml");
-                } catch (TransformerException | ParserConfigurationException e) {
-                    e.printStackTrace();
-                }
-
-                StringBuilder realResult = new StringBuilder();
-                if (xmlFile != null) {
-                    for (String line : FileUtils.readLines(xmlFile)) {
-                        realResult.append(line);
-                    }
-                }
-
-                response.setStatus(HttpServletResponse.SC_OK);
-                PrintWriter writer = response.getWriter();
-                writer.write(realResult.toString());
-                writer.flush();
-                writer.close();
+                fillResponse(response, createAndExportXmlFile());
             }
-
         }
 
-        if (CREATE_NEW_MESSAGE.equals(command)) {
+        if (Command.CREATE_NEW_MESSAGE.getValue().equals(command)) {
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
+    }
+
+    private StringBuilder createAndExportHtmlFile() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<html><body>These are your messages: <br>");
+        for (Message message : messageService.fetchAllMessages()) {
+            builder.append(message.getTitle()).append(" ");
+            builder.append(message.getContent()).append(" ");
+            builder.append(message.getSender()).append(" ");
+            builder.append(message.getUrl()).append(" ");
+            builder.append("<br>");
+        }
+        builder.append("</body></html>");
+        return builder;
+    }
+
+    private void fillResponse(HttpServletResponse response, StringBuilder builder) throws IOException {
+        response.setStatus(HttpServletResponse.SC_OK);
+        PrintWriter writer = response.getWriter();
+        writer.write(builder.toString());
+        writer.flush();
+        writer.close();
+    }
+
+    private StringBuilder createAndExportXmlFile() throws IOException {
+        File xmlFile = null;
+        try {
+            xmlFile = exportService.createAndExportXml("tempFile.xml");
+        } catch (TransformerException | ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        StringBuilder output = new StringBuilder();
+        if (xmlFile != null) {
+            for (String line : Files.readAllLines(Paths.get(xmlFile.getPath()))) {
+                output.append(line);
+            }
+        }
+        return output;
     }
 
     private Message createMessage(HttpServletRequest request) {
