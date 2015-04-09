@@ -1,6 +1,7 @@
 package test.java.service.export;
 
 import main.java.service.export.ExportService;
+import main.java.service.message.Message;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collections;
 
 /**
  * @author vladimir.tikhomirov
@@ -30,9 +32,16 @@ public class ExportServiceImplTest {
     }
 
     @Test
-    public void testExportXml() throws Exception {
+    public void testCreateAndExportXml() throws Exception {
+        //SETUP SUT
+        Message message = new Message();
+        message.setTitle("title");
+        message.setContent("content");
+        message.setSender("author");
+        message.setUrl("url");
+
         //EXERCISE
-        File streamResult = exportService.createAndExportXml(TESTFILE_XML);
+        File streamResult = exportService.createAndExportXml(TESTFILE_XML, Collections.singletonList(message));
         //VERIFY
         Assert.assertNotNull(streamResult);
     }

@@ -38,11 +38,12 @@ public class ReceiveMessagesServlet extends HttpServlet {
 
         if (Command.LIST_MESSAGES.getValue().equals(command)) {
             String exportType = request.getParameter("exportType");
+            Collection<Message> messages = messageService.fetchAllMessages();
             if (HTML_TYPE.equals(exportType)) {
-                fillResponse(response, createAndExportHtmlFile());
+                fillResponse(response, createAndExportHtmlFile(messages));
             }
             if (XML_TYPE.equals(exportType)) {
-                fillResponse(response, createAndExportXmlFile());
+                fillResponse(response, createAndExportXmlFile(messages));
             }
         }
 
@@ -51,9 +52,8 @@ public class ReceiveMessagesServlet extends HttpServlet {
         }
     }
 
-    private StringBuilder createAndExportHtmlFile() {
+    private StringBuilder createAndExportHtmlFile(Collection<Message> messages) {
         StringBuilder builder = new StringBuilder();
-        Collection<Message> messages = messageService.fetchAllMessages();
         if (messages.isEmpty()) {
             builder.append("You haven't create any messages yet. Please, return to the previous page and create a new message.");
             return builder;
@@ -79,10 +79,10 @@ public class ReceiveMessagesServlet extends HttpServlet {
         writer.close();
     }
 
-    private StringBuilder createAndExportXmlFile() throws IOException {
+    private StringBuilder createAndExportXmlFile(Collection<Message> messages) throws IOException {
         File xmlFile = null;
         try {
-            xmlFile = exportService.createAndExportXml("tempFile.xml");
+            xmlFile = exportService.createAndExportXml("tempFile.xml", messages);
         } catch (TransformerException | ParserConfigurationException e) {
             e.printStackTrace();
         }

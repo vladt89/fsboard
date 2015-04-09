@@ -1,5 +1,6 @@
 package main.java.service.export;
 
+import main.java.service.message.Message;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -11,7 +12,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.File;
+import java.util.Collection;
 
 /**
  * @author vladimir.tikhomirov
@@ -19,7 +21,8 @@ import java.io.*;
 public class ExportServiceImpl implements ExportService {
 
     @Override
-    public File createAndExportXml(String filename) throws TransformerException, ParserConfigurationException {
+    public File createAndExportXml(String filename, Collection<Message> messages) throws TransformerException, ParserConfigurationException {
+
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
@@ -27,25 +30,17 @@ public class ExportServiceImpl implements ExportService {
         Element rootElement = doc.createElement("messages");
         doc.appendChild(rootElement);
 
-        Element message = doc.createElement("message");
-        rootElement.appendChild(message);
-        message.setAttribute("id", "1");
+        int i = 1;
+        for (Message message : messages) {
+            Element elementMessage = doc.createElement("message");
+            rootElement.appendChild(elementMessage);
+            elementMessage.setAttribute("id", String.valueOf(i++));
 
-        Element title = doc.createElement("title");
-        title.appendChild(doc.createTextNode("hello"));
-        message.appendChild(title);
-
-        Element content = doc.createElement("content");
-        content.appendChild(doc.createTextNode("hello, my dear friend"));
-        message.appendChild(content);
-
-        Element author = doc.createElement("author");
-        author.appendChild(doc.createTextNode("Vasya"));
-        message.appendChild(author);
-
-        Element url = doc.createElement("url");
-        url.appendChild(doc.createTextNode("http://google.com"));
-        message.appendChild(url);
+            elementMessage.appendChild(createElement(doc, "title", message.getTitle()));
+            elementMessage.appendChild(createElement(doc, "content", message.getContent()));
+            elementMessage.appendChild(createElement(doc, "author", message.getSender()));
+            elementMessage.appendChild(createElement(doc, "url", message.getUrl()));
+        }
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
@@ -53,8 +48,13 @@ public class ExportServiceImpl implements ExportService {
 
         final String dir = System.getProperty("user.dir");
         File outputFile = new File(dir + "/" + filename);
-        StreamResult result = new StreamResult(outputFile);
-        transformer.transform(source, result);
+        transformer.transform(source, new StreamResult(outputFile));
         return outputFile;
+    }
+
+    private Element createElement(Document doc, String type, String value) {
+        Element docElement = doc.createElement(type);
+        docElement.appendChild(doc.createTextNode(value));
+        return docElement;
     }
 }
